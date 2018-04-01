@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerThread extends Thread {
-    private byte[] buffer;
     private Socket clientSocket;
     private DatabaseReference databaseReference;
 
@@ -41,18 +40,17 @@ public class ServerThread extends Thread {
             try {
                 // This will receive the responses from the client
                 DataInputStream in = new DataInputStream(clientSocket.getInputStream());
-                buffer = new byte[59];
-                int count = 0;
+
 
                 while(true) {
-                    // Count the number of available bytes in the stream
 
-
-                    // Create a buffer the size of the available bytes in stream
-                    count += in.read(buffer);
+                    if(in.available() > 0) {
+                        // Count the number of available bytes in the stream
+                        byte[] buffer = new byte[59];
+                        System.out.println("Available bytes to read from stream : " + in.available() + " | buffer length: " + buffer.length);
+                        // Create a buffer the size of the available bytes in stream
+                        in.readFully(buffer);
 //                    buffer = new byte[count];
-                    //Print the number of bytes read
-                    if (count == 59) {
 
                         List<byte[]> tokens = new ArrayList<byte[]>();
                         final byte delimiter = ' ';
@@ -93,7 +91,6 @@ public class ServerThread extends Thread {
                         String hashedDeviceID = new String(tokens.get(HASHED_DEVICE_ID_INDEX));
                         System.out.print(hashedDeviceID);
                         System.out.print(" ");
-
                         wrapped = ByteBuffer.wrap(tokens.get(TIMESTAMP_INDEX)); // big-endian by default
                         long timestamp = wrapped.getLong();
                         System.out.print(timestamp + " ");
@@ -112,14 +109,6 @@ public class ServerThread extends Thread {
                         DatabaseReference time = device.child(Long.toString(timestamp));
                         System.out.println(time.toString());
                         time.setValueAsync(new GPSData(latitude, longitude));
-
-                        DatabaseReference foo = databaseReference.child("foo");
-                        DatabaseReference bar = foo.child("bar");
-                        System.out.println(time.toString());
-                        bar.setValueAsync(new GPSData(latitude, longitude));
-                        sleep(1000);
-                        buffer = new byte[59];
-                        count = 0;
                     }
                 }
 
