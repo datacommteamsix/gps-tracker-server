@@ -33,8 +33,8 @@ public class App {
                     .setDatabaseUrl("https://comp4985-ass-3.firebaseio.com")
                     .build();
 
-            FirebaseApp.initializeApp(options);
-            System.out.println("Connected to Firebase...");
+            FirebaseApp firebase = FirebaseApp.initializeApp(options);
+            System.out.println("" + firebase.toString());
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -49,7 +49,6 @@ public class App {
         }
 
         int port = Integer.parseInt(args[0]);
-        int deviceNo = 0;
 
         try {
             //Spawn the listening socket
@@ -61,8 +60,7 @@ public class App {
                 Socket clientSocket = listeningSocket.accept();
                 System.out.println("Server accepted new client: " + clientSocket.getRemoteSocketAddress());
                 //This is a really primitive form of id, this should be revamped
-                DatabaseReference ref = database.getReference("/device" + deviceNo);
-                deviceNo++;
+                DatabaseReference ref = database.getReference();
                 System.out.println("Creating servant thread");
                 // If it unblocks because it has accepted a connect, delegate the work to a new thread, then rinse and repeat
                 new ServerThread(clientSocket, ref).start();
