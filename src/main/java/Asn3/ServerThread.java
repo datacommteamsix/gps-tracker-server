@@ -66,7 +66,7 @@ public class ServerThread extends Thread {
     public ServerThread(Socket clientSocket, DatabaseReference databaseReference) throws IOException {
         this.clientSocket      = clientSocket;
         this.databaseReference = databaseReference;
-        clientSocket.setSoTimeout(TIMEOUT); // set a 20 second timeout
+        clientSocket.setSoTimeout(TIMEOUT);
     }
 
     /**
@@ -74,35 +74,34 @@ public class ServerThread extends Thread {
      */
     public void run() {
             try {
-                // This will receive the responses from the client
                 DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 
                 while(true) {
                     try {
                         if(in.available() > 0) {
-                            // Count the number of available bytes in the stream
-                            byte[] buffer = new byte[GPS_PACKET_SIZE];
-                            System.out.println("Available bytes to read from stream : " + in.available() + " | buffer length: " + buffer.length);
                             // Create a buffer the size of the available bytes in stream
+                            byte[] buffer = new byte[GPS_PACKET_SIZE];
+
+                            // Read the packet
                             in.readFully(buffer);
 
                             List<byte[]> tokens = new ArrayList<byte[]>();
                             final byte delimiter = ' ';
                             int lastIndexOfDelimiter = -1;
 
-                            //Break up the packet into tokens
+                            // Break up the packet into tokens
                             for (int i = 0; i < buffer.length; i++) {
                                 // If you hit a delimiter...
                                 if (buffer[i] == delimiter) {
                                     int length = i - lastIndexOfDelimiter - 1;
                                     byte[] token = new byte[length];
 
-                                    //Copy the token to array
+                                    // Copy the token to array
                                     System.arraycopy(buffer, lastIndexOfDelimiter + 1, token, 0, length);
                                     //Add to the list
                                     tokens.add(token);
 
-                                    //Set the index
+                                    // Set the index
                                     lastIndexOfDelimiter = i;
                                 }
 
@@ -110,16 +109,16 @@ public class ServerThread extends Thread {
                                     int length = buffer.length - lastIndexOfDelimiter - 1;
                                     byte[] token = new byte[length];
 
-                                    //Copy the token to array
+                                    // Copy the token to array
                                     System.arraycopy(buffer, lastIndexOfDelimiter + 1, token, 0, length);
-                                    //Add to the list
+                                    // Add to the list
                                     tokens.add(token);
                                 }
                             }
 
                             ByteBuffer wrapped;
 
-                            //Parse and print the content of the tokens
+                            // Parse and print the content of the tokens
                             System.out.print("The parsed packet: ");
 
                             String hashedDeviceID = new String(tokens.get(HASHED_DEVICE_ID_INDEX));
@@ -137,7 +136,7 @@ public class ServerThread extends Thread {
                             double longitude = wrapped.getDouble();
                             System.out.print(longitude + " \n");
 
-                            //Send the data to firebase
+                            // Send the data to firebase
                             System.out.println("Sending parsed data to Firebase");
                             DatabaseReference device = databaseReference.child(hashedDeviceID);
                             DatabaseReference time = device.child(Long.toString(timestamp));
@@ -151,7 +150,7 @@ public class ServerThread extends Thread {
                     }
                 }
 
-                //No need to close the connection, just drop it from the client side
+                // No need to close the connection, just drop it from the client side
             } catch (SocketTimeoutException s) {
                 System.out.println("Socket timed out!");
             } catch (IOException e) {

@@ -27,7 +27,7 @@ public class App {
     public static void main (String[] args) {
         ServerSocket listeningSocket;
 
-        //Initialize Firebase using SNIPPETS
+        // Initialize Firebase using SNIPPETS
         try {
             FileInputStream serviceAccount = new FileInputStream("comp4985-ass-3-firebase-adminsdk-8h0nb-9ab704e427.json");
 
@@ -42,10 +42,10 @@ public class App {
             e.printStackTrace();
         }
 
-        //Get the firebase instance
+        // Get the firebase instance
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-        //Get port from command line because why not
+        // Get port from command line because why not
         if(args.length != 1) {
             System.out.println("Usage Error : java jserver <port>");
             System.exit(0);
@@ -54,12 +54,12 @@ public class App {
         int port = Integer.parseInt(args[0]);
 
         try {
-            //Spawn the listening socket
+            // Spawn the listening socket
             listeningSocket = new ServerSocket(port);
 
             System.out.println("Listening socket created: " + listeningSocket.getLocalSocketAddress());
 
-            //Start listening...
+            // Start listening...
             while(true) {
                 // Blocking accept call, returns a new socket to handle the connected client
                 Socket clientSocket = listeningSocket.accept();
