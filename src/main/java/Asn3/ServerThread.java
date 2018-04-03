@@ -79,7 +79,7 @@ public class ServerThread extends Thread {
                 while(true) {
                     try {
                         if(in.available() > 0) {
-                            // Create a buffer the size of the available bytes in stream
+                            // Create a buffer the size of the packet
                             byte[] buffer = new byte[GPS_PACKET_SIZE];
 
                             // Read the packet
