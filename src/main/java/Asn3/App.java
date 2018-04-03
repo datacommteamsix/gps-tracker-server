@@ -13,13 +13,16 @@ import java.net.Socket;
 
 /**
  * The Main class.
+ *
+ * @author Angus Lam
+ * @version 4-3-2018
  */
 public class App {
-
     /**
      * The main method.
      *
      * @param args
+     *          Only takes in one argument for server port
      */
     public static void main (String[] args) {
         ServerSocket listeningSocket;
@@ -53,13 +56,16 @@ public class App {
         try {
             //Spawn the listening socket
             listeningSocket = new ServerSocket(port);
+
             System.out.println("Listening socket created: " + listeningSocket.getLocalSocketAddress());
+
             //Start listening...
             while(true) {
                 // Blocking accept call, returns a new socket to handle the connected client
                 Socket clientSocket = listeningSocket.accept();
+
                 System.out.println("Server accepted new client: " + clientSocket.getRemoteSocketAddress());
-                //This is a really primitive form of id, this should be revamped
+
                 DatabaseReference ref = database.getReference();
                 System.out.println("Creating servant thread");
                 // If it unblocks because it has accepted a connect, delegate the work to a new thread, then rinse and repeat

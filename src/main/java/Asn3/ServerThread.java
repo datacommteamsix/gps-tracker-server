@@ -1,11 +1,8 @@
 package Asn3;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.maps.internal.PolylineEncoding;
-import com.google.maps.model.LatLng;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -31,18 +28,35 @@ public class ServerThread extends Thread {
      */
     private DatabaseReference databaseReference;
 
+    /**
+     * The index of the device id
+     */
     private static final int HASHED_DEVICE_ID_INDEX = 0;
+    /**
+     * The index of the time stamp
+     */
     private static final int TIMESTAMP_INDEX = 1;
+    /**
+     * The index of the latitude
+     */
     private static final int LATITUDE_INDEX = 2;
+    /**
+     * The index of the latitude
+     */
     private static final int LONGITUDE_INDEX = 3;
+    /**
+     * The timeout period for the tcp connection in milliseconds
+     */
     private static final int TIMEOUT = 20000;
 
     /**
-     * This creates a thread with the client socket
+     * This creates a thread using a client socket
      * and a reference to the firebase database
      *
      * @param clientSocket
+     *          The client socket
      * @param databaseReference
+     *          The firebase database reference
      * @throws IOException
      */
     public ServerThread(Socket clientSocket, DatabaseReference databaseReference) throws IOException {
@@ -151,9 +165,18 @@ public class ServerThread extends Thread {
  *
  * If you want to create a child node without a value, use getReference and pass
  * in a new path.
+ *
+ * @author Angus Lam
+ * @version 4-3-2018
  */
 class GPSData {
+    /**
+     * The GPS latitude
+     */
     public double latitude;
+    /**
+     * The GPS longitude
+     */
     public double longitude;
 
     /**
