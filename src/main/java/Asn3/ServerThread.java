@@ -48,6 +48,10 @@ public class ServerThread extends Thread {
      * The timeout period for the tcp connection in milliseconds
      */
     private static final int TIMEOUT = 20000;
+    /**
+     * The packet size for our gps data
+     */
+    private static final int GPS_PACKET_SIZE = 59;
 
     /**
      * This creates a thread using a client socket
@@ -77,7 +81,7 @@ public class ServerThread extends Thread {
                     try {
                         if(in.available() > 0) {
                             // Count the number of available bytes in the stream
-                            byte[] buffer = new byte[59];
+                            byte[] buffer = new byte[GPS_PACKET_SIZE];
                             System.out.println("Available bytes to read from stream : " + in.available() + " | buffer length: " + buffer.length);
                             // Create a buffer the size of the available bytes in stream
                             in.readFully(buffer);
